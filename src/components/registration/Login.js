@@ -16,7 +16,6 @@ export default function Login() {
             [name]: value,
         }));
         setEmailExists(false);
-        setMessage('');
     };
 
     const handleSubmit = async (event) => {

@@ -21,12 +21,12 @@ export default function SignUp() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         try {
             const response = await axios.post('http://127.0.0.1:5000/signup', formData);
             setMessage('Successfully registered!');
             const { access_token } = response.data;
             localStorage.setItem('access_token', access_token);
+
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 setMessage('Email already exists!');

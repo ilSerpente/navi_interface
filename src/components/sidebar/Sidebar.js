@@ -13,15 +13,22 @@ export default function ListOfTrucks(props) {
 
     function formatTable() {
         let trucks = props.trucks
-        let count = trucks.length;
         let hub = []
 
-        for (let i = 0; i !== count; i++) {
-            if (trucks[i] !== undefined) {
+        for (const [key, value] of Object.entries(trucks)) {
+            if (value !== undefined) {
+                let plate, name;
+                if (value.current_driver !== "No driver"){
+                    plate =  value.NAME1
+                    name = value.NAME2
+                } else {
+                    plate = "No plate"
+                    name = " No driver"
+                }
                 let truck = {
-                    id: i + 1,
-                    col1: trucks[i].current_driver.raw.NAME1,
-                    col2: trucks[i].current_driver.raw.NAME2
+                    id: key,
+                    col1: plate,
+                    col2: name
                 }
                 hub = [...hub, truck]
             }
@@ -31,7 +38,7 @@ export default function ListOfTrucks(props) {
 
     return (
         <div className="tableDiv">
-            {props.trucks.length > 0 &&
+            {Object.keys(props.trucks).length > 0 &&
                 <DataGrid
                     rows={formatTable()}
                     columns={columns}

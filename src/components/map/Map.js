@@ -28,18 +28,24 @@ function trucksToGeojson(trucks) {
         "features": []
     }
 
-    for (let i = 0; i < trucks.length; i++) {
+    for (const [key, value] of Object.entries(trucks)) {
+        let name;
+        if (value.NAME1 == "No driver"){
+            name = "No driver"
+        } else {
+            name = value.NAME1
+        }
         let feature = {
             "type": "Feature",
             "properties": {
                 'name': 'Rixo',
-                'description': `<strong>${trucks[i].current_driver.raw.NAME1}</strong><p>Google maps: <a href="https://maps.google.com/?q=${trucks[i].lat},${trucks[i].lon}" target="_blank">${trucks[i].lat}, ${trucks[i].lon}</a></p>`
+                'description': `<strong>${name}</strong><p>Google maps: <a href="https://maps.google.com/?q=${value.lat},${value.lon}" target="_blank">${value.lat}, ${value.lon}</a></p>`
 
             },
             "geometry": {
                 "coordinates": [
-                    trucks[i].lon,
-                    trucks[i].lat
+                    value.lon,
+                    value.lat
                 ],
                 "type": "Point"
             }
@@ -108,8 +114,7 @@ export default function Map(props) {
 
     useEffect(() => {
 
-        if (props.trucks.length > 0) {
-            console.log(props.trucks, "DEFENCE")
+        if (Object.keys(props.trucks).length > 0) {
             setGeojson(trucksToGeojson(props.trucks))
         }
 

@@ -10,7 +10,7 @@ const columns = [
 ];
 
 export default function ListOfTrucks(props) {
-
+    console.log(props, "From LOT")
     function formatTable() {
         let trucks = props.trucks
         let hub = []

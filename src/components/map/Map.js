@@ -38,7 +38,7 @@ function trucksToGeojson(trucks) {
         let feature = {
             "type": "Feature",
             "properties": {
-                'name': 'Rixo',
+                'name': name,
                 'description': `<strong>${name}</strong><p>Google maps: <a href="https://maps.google.com/?q=${value.lat},${value.lon}" target="_blank">${value.lat}, ${value.lon}</a></p>`
 
             },

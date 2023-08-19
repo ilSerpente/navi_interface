@@ -13,7 +13,6 @@ export default function Page() {
         let trucksJson = await request.json()
         timestamp.current = trucksJson.timestamp;
         let newTrucksRaw = {};
-
         for (const [key, value] of Object.entries(trucksJson.list)) {
             newTrucksRaw[key] = {
                 NAME1: value.NAME1,
@@ -25,12 +24,23 @@ export default function Page() {
         }
 
         for (const [key, value] of Object.entries(trucksRaw)) {
-            newTrucksRaw[key] = {
-                NAME1: value.NAME1,
-                NAME2: value.NAME2,
-                lat: value.lat,
-                lon: value.lon,
-                truck_id: value.truck_id,
+            if (key in newTrucksRaw) {
+                newTrucksRaw[key] = {
+                    NAME1: trucksJson.list[key].NAME1,
+                    NAME2: trucksJson.list[key].NAME2,
+                    lat: trucksJson.list[key].lat,
+                    lon: trucksJson.list[key].lon,
+                    truck_id: trucksJson.list[key].truck_id,
+                }
+
+            } else {
+                newTrucksRaw[key] = {
+                    NAME1: value.NAME1,
+                    NAME2: value.NAME2,
+                    lat: value.lat,
+                    lon: value.lon,
+                    truck_id: value.truck_id,
+                }
             }
         }
         setTrucksRaw(newTrucksRaw);
@@ -50,7 +60,7 @@ export default function Page() {
             clearInterval(intervalCall);
         };
     }, [trucksRaw]);
-    
+
     return (
         <div>
             <Map trucks={trucksRaw} />

@@ -39,7 +39,8 @@ export default function ListOfTrucks(props) {
         }
         return hub;
     }
-
+    // const smth = Object.keys(props.trucks).filter(key => props.trucks[key].displayed == false)
+    // console.log(props.rowSelectionModel, "FALSE DISPL")
 
     return (
         <>
@@ -55,12 +56,15 @@ export default function ListOfTrucks(props) {
                                 columns={columns}
                                 initialState={{
                                     pagination: {
-                                      paginationModel: { page: 0, pageSize: 100 },
+                                        paginationModel: { page: 0, pageSize: 100 },
                                     },
-                                  }}
-                                  pageSizeOptions={[50, 100]}
+                                }}
+                                pageSizeOptions={[50, 100]}
                                 checkboxSelection
-                                disableRowSelectionOnClick
+                                // rowSelectionModel={Object.keys(props.trucks).filter(key => props.trucks[key].displayed === true)}
+                                disableRowSelectionOnClick={false}
+                                onRowSelectionModelChange={props.onRowSelectionModelChange}
+                                rowSelectionModel={props.rowSelectionModel}
                             />
                         }
                     </div>

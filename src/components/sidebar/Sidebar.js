@@ -1,8 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid';
-
-const rows = [
-    { id: 1, col1: 'Hello', col2: 'World' }
-];
+import { useEffect, useState } from 'react'
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 
 const columns = [
     { field: 'col1', headerName: 'Truck plate', width: 150 },
@@ -10,44 +9,68 @@ const columns = [
 ];
 
 export default function ListOfTrucks(props) {
+    const [sidebarPosition, setSidebarPosition] = useState(true);
+
+    function handleSideBarMenuButton() {
+        setSidebarPosition(prevPosition => !prevPosition);
+    }
 
     function formatTable() {
         let trucks = props.trucks
-        let count = trucks.length;
         let hub = []
 
-        for (let i = 0; i !== count; i++) {
-            if (trucks[i] !== undefined) {
+        for (const [key, value] of Object.entries(trucks)) {
+            if (value !== undefined) {
+                let plate, name;
+                if (value.current_driver !== "No driver") {
+                    plate = value.NAME1
+                    name = value.NAME2
+                } else {
+                    plate = "No plate"
+                    name = "No driver"
+                }
                 let truck = {
-                    id: i + 1,
-                    col1: trucks[i].current_driver.raw.NAME1,
-                    col2: trucks[i].current_driver.raw.NAME2
+                    id: key,
+                    col1: plate,
+                    col2: name
                 }
                 hub = [...hub, truck]
             }
         }
         return hub;
     }
+    // const smth = Object.keys(props.trucks).filter(key => props.trucks[key].displayed == false)
+    // console.log(props.rowSelectionModel, "FALSE DISPL")
 
     return (
-        <div className="tableDiv">
-            {props.trucks.length > 0 &&
-                <DataGrid
-                    rows={formatTable()}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-
-                            },
-                        },
-                    }}
-                    pageSizeOptions={[5]}
-                    checkboxSelection
-                    disableRowSelectionOnClick
-                />
-            }
-
-        </div>
+        <>
+            {sidebarPosition ?
+                <div className="tableDiv">
+                    <div className="sideBarMenuDiv">
+                        <ArrowCircleLeftOutlinedIcon className="sideBarMenuButtonOff" onClick={handleSideBarMenuButton} />
+                    </div>
+                    <div className="dataGridDiv">
+                        {Object.keys(props.trucks).length > 0 &&
+                            <DataGrid
+                                rows={formatTable()}
+                                columns={columns}
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: { page: 0, pageSize: 100 },
+                                    },
+                                }}
+                                pageSizeOptions={[50, 100]}
+                                checkboxSelection
+                                // rowSelectionModel={Object.keys(props.trucks).filter(key => props.trucks[key].displayed === true)}
+                                disableRowSelectionOnClick={false}
+                                onRowSelectionModelChange={props.onRowSelectionModelChange}
+                                rowSelectionModel={props.rowSelectionModel}
+                            />
+                        }
+                    </div>
+                </div> : <div className="sideBarMenuDiv">
+                    <ArrowCircleRightOutlinedIcon className="sideBarMenuButtonOn" onClick={handleSideBarMenuButton} />
+                </div>}
+        </>
     );
 }

@@ -32,6 +32,26 @@ code {
   border-radius: 4px;
 } */
 
+.sideBarMenuButtonOff {
+  position: fixed;
+  margin-left: 25%;
+}
+
+.sideBarMenuButtonOn {
+  top: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.dataGridDiv {
+  position: fixed;
+  top: 0;
+  background-color: white;
+  width: 350px;
+  height: 100%;
+  z-index: 2;
+}
+
 .tableDiv {
   position: fixed;
   top: 0;

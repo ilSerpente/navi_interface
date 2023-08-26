@@ -21,33 +21,41 @@ const point = {
         }
     ]
 }
-
-function trucksToGeojson(trucks) {
+function trucksToGeojson(props) {
     let collection = {
         "type": "FeatureCollection",
         "features": []
     }
 
-    for (let i = 0; i < trucks.length; i++) {
-        let feature = {
-            "type": "Feature",
-            "properties": {
-                'name': 'Rixo',
-                'description': `<strong>${trucks[i].current_driver.raw.NAME1}</strong><p>Google maps: <a href="https://maps.google.com/?q=${trucks[i].lat},${trucks[i].lon}" target="_blank">${trucks[i].lat}, ${trucks[i].lon}</a></p>`
-
-            },
-            "geometry": {
-                "coordinates": [
-                    trucks[i].lon,
-                    trucks[i].lat
-                ],
-                "type": "Point"
+    for (const rowId of props.rowSelectionModel) {
+        const truck = props.trucks[rowId];
+        if (truck) {
+            let name;
+            if (truck.NAME1 === "No driver") {
+                name = "No driver";
+            } else {
+                name = truck.NAME1;
             }
+            let feature = {
+                "type": "Feature",
+                "properties": {
+                    'name': name,
+                    'description': `<strong>${name}</strong><p>Google maps: <a href="https://maps.google.com/?q=${truck.lat},${truck.lon}" target="_blank">${truck.lat}, ${truck.lon}</a></p>`
+                },
+                "geometry": {
+                    "coordinates": [
+                        truck.lon,
+                        truck.lat
+                    ],
+                    "type": "Point"
+                }
+            }
+            collection.features.push(feature);
         }
-        collection.features.push(feature)
     }
     return collection;
 }
+
 
 export default function Map(props) {
 
@@ -108,9 +116,8 @@ export default function Map(props) {
 
     useEffect(() => {
 
-        if (props.trucks.length > 0) {
-            console.log(props.trucks, "DEFENCE")
-            setGeojson(trucksToGeojson(props.trucks))
+        if (Object.keys(props.trucks).length > 0) {
+            setGeojson(trucksToGeojson(props))
         }
 
         if (!map.current.isStyleLoaded()) return;
